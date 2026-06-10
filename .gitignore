@@ -1,0 +1,48 @@
+# --- .NET / Visual Studio ---
+bin/
+obj/
+out/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+TestResults/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
+artifacts/
+publish/
+
+# EF Core / local config
+appsettings.Development.local.json
+*.pfx
+
+# --- Node / frontend ---
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+.eslintcache
+
+# --- Environment & secrets (never commit) ---
+.env
+.env.*
+!.env.example
+
+# --- Vercel ---
+.vercel/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/

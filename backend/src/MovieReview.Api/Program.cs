@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using MovieReview.Api.Auth;
 using MovieReview.Api.Data;
+using MovieReview.Api.External.Tmdb;
 using MovieReview.Api.Repositories.Implementations;
 using MovieReview.Api.Repositories.Interfaces;
 using MovieReview.Api.Services.Implementations;
@@ -98,6 +99,15 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 
+// ---------- TMDB external service ----------
+builder.Services.Configure<TmdbSettings>(builder.Configuration.GetSection(TmdbSettings.SectionName));
+builder.Services.AddHttpClient<ITmdbClient, TmdbClient>((serviceProvider, client) =>
+{
+    var tmdbSettings = builder.Configuration.GetSection(TmdbSettings.SectionName).Get<TmdbSettings>() ?? new TmdbSettings();
+    client.BaseAddress = new Uri(tmdbSettings.BaseUrl);
+    client.Timeout = TimeSpan.FromSeconds(15);
+});
+
 // ---------- Services — business rules live here, controllers stay logic-free ----------
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -106,6 +116,7 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITmdbImportService, TmdbImportService>();
 
 var app = builder.Build();
 

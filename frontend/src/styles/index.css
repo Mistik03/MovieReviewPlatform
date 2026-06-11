@@ -1,0 +1,80 @@
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/archivo';
+@import 'tailwindcss';
+
+@theme {
+  /* Screening-room palette: charcoal surfaces, projector-warm paper, one marquee-amber accent */
+  --color-ink: #0b0b0d;
+  --color-panel: #121214;
+  --color-raised: #18181b;
+  --color-line: #232328;
+  --color-paper: #edeae4;
+  --color-muted: #8e8b85;
+  --color-faint: #55534e;
+  --color-amber: #d9a648;
+  --color-amber-soft: #b3873a;
+  --color-danger: #c4564a;
+
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --font-body: 'Archivo Variable', system-ui, sans-serif;
+}
+
+html {
+  scrollbar-color: var(--color-faint) var(--color-ink);
+}
+
+body {
+  @apply bg-ink text-paper font-body antialiased;
+  font-variation-settings: 'wdth' 100;
+}
+
+/* Display headlines get Fraunces' high-contrast optical size */
+.font-display {
+  font-variation-settings: 'opsz' 72, 'SOFT' 0, 'WONK' 0;
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-ink);
+}
+
+/* Film-grain overlay — fixed, never intercepts input */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Horizontal scrollers: momentum + snap, hidden scrollbar */
+.scroll-row {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar {
+  display: none;
+}
+.scroll-row > * {
+  scroll-snap-align: start;
+}
+
+/* Cinematic vignette for hero backdrops */
+.vignette {
+  background:
+    linear-gradient(to top, var(--color-ink) 2%, transparent 55%),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-ink) 75%, transparent) 0%, transparent 30%),
+    radial-gradient(ellipse at center, transparent 40%, color-mix(in srgb, var(--color-ink) 62%, transparent) 100%);
+}
+
+/* Reveal targets start hidden only when a [data-animate] ancestor is present and motion is allowed */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+  }
+}

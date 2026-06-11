@@ -6,6 +6,7 @@ using Microsoft.OpenApi;
 using MovieReview.Api.Auth;
 using MovieReview.Api.Data;
 using MovieReview.Api.External.Tmdb;
+using MovieReview.Api.Middleware;
 using MovieReview.Api.Repositories.Implementations;
 using MovieReview.Api.Repositories.Interfaces;
 using MovieReview.Api.Services.Implementations;
@@ -133,6 +134,9 @@ else
 {
     app.Logger.LogWarning("No connection string configured — skipping migration and admin seeding.");
 }
+
+// Domain exceptions from the service layer become ProblemDetails responses here.
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Swagger stays enabled in every environment: the rubric asks for an API testable via Swagger UI.
 app.UseSwagger();

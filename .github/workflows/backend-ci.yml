@@ -1,0 +1,52 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths: ['backend/**', '.github/workflows/backend-ci.yml']
+  pull_request:
+    paths: ['backend/**', '.github/workflows/backend-ci.yml']
+
+jobs:
+  build-and-test:
+    name: Build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore backend/MovieReview.slnx
+
+      - name: Build
+        run: dotnet build backend/MovieReview.slnx --no-restore -c Release
+
+      - name: Test
+        run: dotnet test backend/MovieReview.slnx --no-build -c Release --logger "trx;LogFileName=results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: '**/results.trx'
+
+  deploy:
+    name: Deploy to Render
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy hook
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -n "$DEPLOY_HOOK" ]; then
+            curl -fsS "$DEPLOY_HOOK" && echo "Render deploy triggered."
+          else
+            echo "RENDER_DEPLOY_HOOK_URL secret not set - skipping deploy."
+          fi

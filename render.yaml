@@ -1,0 +1,26 @@
+# Render Blueprint — creates the API service with one click ("New + Blueprint" in Render).
+# Secrets marked sync:false are entered once in the Render dashboard.
+services:
+  - type: web
+    name: moviereview-api
+    runtime: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/genres
+    autoDeploy: false # deploys are triggered by GitHub Actions after tests pass
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ConnectionStrings__Default
+        sync: false
+      - key: Jwt__Key
+        sync: false
+      - key: Tmdb__ApiKey
+        sync: false
+      - key: Admin__Password
+        sync: false
+      - key: Cors__Origins__0
+        value: http://localhost:5173
+      - key: Cors__Origins__1
+        sync: false # set to the Vercel production URL, e.g. https://your-app.vercel.app

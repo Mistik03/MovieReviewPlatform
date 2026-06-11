@@ -63,7 +63,10 @@ public static class DtoMapper
         dto.ReleaseYear = title.ReleaseYear;
         dto.PosterUrl = title.PosterUrl;
         dto.BackdropUrl = title.BackdropUrl;
-        dto.AverageRating = row.AverageRating is null ? null : Math.Round(row.AverageRating.Value, 1);
+        // AwayFromZero so 8.25 displays as 8.3, matching what users expect from a rating.
+        dto.AverageRating = row.AverageRating is null
+            ? null
+            : Math.Round(row.AverageRating.Value, 1, MidpointRounding.AwayFromZero);
         dto.ReviewCount = row.ReviewCount;
         dto.RatingCount = row.RatingCount;
         dto.Genres = title.TitleGenres

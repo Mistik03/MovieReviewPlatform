@@ -62,8 +62,9 @@ public class TitleRepository : ITitleRepository
 
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
-            var pattern = $"%{query.Search.Trim()}%";
-            titles = titles.Where(t => EF.Functions.ILike(t.Name, pattern));
+            // Case-insensitive LIKE that translates on both PostgreSQL and SQLite (used in tests).
+            var pattern = $"%{query.Search.Trim().ToLower()}%";
+            titles = titles.Where(t => EF.Functions.Like(t.Name.ToLower(), pattern));
         }
 
         var totalCount = await titles.CountAsync(ct);

@@ -46,3 +46,6 @@ dist-ssr/
 Thumbs.db
 *.swp
 .idea/
+
+# Claude Code local settings
+.claude/

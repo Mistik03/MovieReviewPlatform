@@ -12,7 +12,12 @@ using MovieReview.Api.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // MediaType serializes as "Movie" / "TvShow" instead of 0 / 1.
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 
 // ---------- Swagger (with JWT bearer support) ----------
 builder.Services.AddEndpointsApiExplorer();
@@ -96,6 +101,11 @@ builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 // ---------- Services — business rules live here, controllers stay logic-free ----------
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITitleService, TitleService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

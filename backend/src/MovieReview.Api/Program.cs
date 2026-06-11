@@ -81,6 +81,22 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 
+// ---------- Rate limiting ----------
+// Tight fixed window on the auth endpoints: blunts credential brute-force and
+// account-enumeration probing. Partitioned per client IP.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("auth", httpContext =>
+        System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
+
 // ---------- CORS ----------
 var corsOrigins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? [];
 builder.Services.AddCors(options =>
@@ -146,6 +162,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.UseCors("Frontend");
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 

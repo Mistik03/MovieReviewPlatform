@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using MovieReview.Api.DTOs.Auth;
 using MovieReview.Api.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace MovieReview.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
+[EnableRateLimiting("auth")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _auth;

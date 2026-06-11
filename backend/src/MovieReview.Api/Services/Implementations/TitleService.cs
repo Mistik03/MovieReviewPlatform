@@ -55,13 +55,17 @@ public class TitleService : ITitleService
 
     public async Task<TitleDetailDto> CreateAsync(TitleCreateDto dto, CancellationToken ct = default)
     {
+        // Trim before the uniqueness check — the stored value is trimmed, so the
+        // comparison must be too, or "Dune " would slip past and hit the DB index.
+        var name = dto.Name.Trim();
+
         // Business rule: title name must be unique per release year and media type.
-        if (await _titles.ExistsByNameYearTypeAsync(dto.Name, dto.ReleaseYear, dto.MediaType, null, ct))
-            throw new ConflictException($"A {dto.MediaType} named '{dto.Name}' ({dto.ReleaseYear}) already exists.");
+        if (await _titles.ExistsByNameYearTypeAsync(name, dto.ReleaseYear, dto.MediaType, null, ct))
+            throw new ConflictException($"A {dto.MediaType} named '{name}' ({dto.ReleaseYear}) already exists.");
 
         var title = new Title
         {
-            Name = dto.Name.Trim(),
+            Name = name,
             MediaType = dto.MediaType,
             Description = dto.Description,
             ReleaseYear = dto.ReleaseYear,
@@ -81,10 +85,11 @@ public class TitleService : ITitleService
         var title = await _titles.GetByIdWithDetailsAsync(id, ct)
             ?? throw new NotFoundException($"Title with id {id} was not found.");
 
-        if (await _titles.ExistsByNameYearTypeAsync(dto.Name, dto.ReleaseYear, title.MediaType, id, ct))
-            throw new ConflictException($"A {title.MediaType} named '{dto.Name}' ({dto.ReleaseYear}) already exists.");
+        var name = dto.Name.Trim();
+        if (await _titles.ExistsByNameYearTypeAsync(name, dto.ReleaseYear, title.MediaType, id, ct))
+            throw new ConflictException($"A {title.MediaType} named '{name}' ({dto.ReleaseYear}) already exists.");
 
-        title.Name = dto.Name.Trim();
+        title.Name = name;
         title.Description = dto.Description;
         title.ReleaseYear = dto.ReleaseYear;
         title.Director = dto.Director;

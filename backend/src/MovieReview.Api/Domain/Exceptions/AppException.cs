@@ -29,3 +29,9 @@ public class BadRequestException : AppException
 {
     public BadRequestException(string message) : base(message) { }
 }
+
+/// <summary>Missing or invalid credentials — maps to 401.</summary>
+public class UnauthorizedException : AppException
+{
+    public UnauthorizedException(string message) : base(message) { }
+}

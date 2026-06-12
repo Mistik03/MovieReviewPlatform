@@ -6,6 +6,11 @@ import { AuthProvider } from './auth/AuthContext'
 import App from './App'
 import './styles/index.css'
 
+// Screenshot/testing aid: ?capture forces entrance-animated elements visible.
+if (new URLSearchParams(window.location.search).has('capture')) {
+  document.documentElement.classList.add('capture')
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

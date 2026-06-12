@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1100px; padding: 30px 40px; font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #1f2430; }
+  .term { background: #14161c; border-radius: 10px; padding: 22px 26px; font-family: Consolas, monospace; font-size: 14px; line-height: 1.75; color: #c8cdd6; }
+  .green { color: #4ec97c; font-weight: 700; }
+  .dim { color: #6b7280; }
+  .amber { color: #d9a648; }
+  .bar { display: flex; gap: 7px; margin-bottom: 14px; }
+  .bar span { width: 11px; height: 11px; border-radius: 50%; background: #2c2f38; }
+  .stats { display: flex; gap: 16px; margin-top: 20px; }
+  .stat { flex: 1; border: 1.5px solid #c7ced9; border-radius: 9px; padding: 13px 17px; }
+  .stat .n { font-size: 25px; font-weight: 800; color: #11151f; }
+  .stat .l { font-size: 12px; color: #5b6472; margin-top: 2px; }
+</style>
+</head>
+<body>
+  <div class="term">
+    <div class="bar"><span></span><span></span><span></span></div>
+    <div class="dim">PS C:\MovieReviewPlatform\backend&gt; <span style="color:#c8cdd6">dotnet test</span></div>
+    <div class="dim">Test run for MovieReview.Tests.dll (.NETCoreApp,Version=v10.0)</div>
+    <div class="dim">Starting test execution, please wait...</div>
+    <div>&nbsp;</div>
+    <div><span class="green">Passed!</span>  - Failed: <span class="amber">0</span>, Passed: <span class="green">92</span>, Skipped: 0, Total: <span class="green">92</span>, Duration: 2 s - MovieReview.Tests.dll (net10.0)</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">50</div><div class="l">Service tests — every business rule, auth, TMDB import orchestration (Moq)</div></div>
+    <div class="stat"><div class="n">22</div><div class="l">Repository tests — real unique indexes, check constraints, queries (SQLite)</div></div>
+    <div class="stat"><div class="n">20</div><div class="l">Controller tests — status codes, routes, identity forwarding</div></div>
+  </div>
+</body>
+</html>

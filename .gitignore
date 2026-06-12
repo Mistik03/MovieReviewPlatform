@@ -49,3 +49,6 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/
+
+# Submission build tooling
+submission/_build/node_modules/

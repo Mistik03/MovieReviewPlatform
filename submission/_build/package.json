@@ -1,0 +1,10 @@
+{
+  "name": "marquee-doc-build",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Generates the final paper (.docx) and slides for the Marquee project",
+  "dependencies": {
+    "docx": "^9.0.0",
+    "pptxgenjs": "^3.12.0"
+  }
+}

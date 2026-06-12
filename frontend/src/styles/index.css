@@ -78,3 +78,11 @@ body {
     opacity: 0;
   }
 }
+
+/* Capture mode (?capture): force entrance-animated elements visible for deterministic
+   screenshots / headless rendering, where scroll-triggered reveals never fire. */
+html.capture [data-hero],
+html.capture [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+}

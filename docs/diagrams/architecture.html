@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1100px; padding: 40px 48px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #ffffff; color: #1f2430;
+  }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; color: #11151f; }
+  .sub { font-size: 13px; color: #5b6472; margin-bottom: 26px; }
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .row { display: flex; align-items: center; gap: 18px; }
+  .layer {
+    flex: 1; border: 1.5px solid #c7ced9; border-radius: 10px;
+    padding: 16px 20px; background: #f7f9fc;
+  }
+  .layer .name { font-size: 16px; font-weight: 700; color: #11151f; }
+  .layer .desc { font-size: 12.5px; color: #5b6472; margin-top: 3px; }
+  .layer .tag { font-size: 11px; color: #9aa3b2; margin-top: 6px; font-style: italic; }
+  .arrow { text-align: center; color: #b07d2b; font-size: 13px; font-weight: 600; padding: 7px 0; }
+  .arrow span { display: block; font-size: 10.5px; color: #98a1b0; font-weight: 400; }
+  .side {
+    width: 250px; border: 1.5px dashed #b8a06a; border-radius: 10px;
+    padding: 14px 18px; background: #fdf8ec;
+  }
+  .side .name { font-size: 14px; font-weight: 700; color: #7a5a16; }
+  .side .desc { font-size: 12px; color: #6b6450; margin-top: 3px; }
+  .accent { color: #b07d2b; }
+  .db {
+    border-color: #2e7d6b; background: #eef7f4;
+  }
+  .db .name { color: #1d5a4c; }
+  .legend { margin-top: 24px; font-size: 11.5px; color: #5b6472; }
+  .legend b { color: #11151f; }
+</style>
+</head>
+<body>
+  <h1>Marquee — Service Oriented Architecture</h1>
+  <div class="sub">Strict four-layer API. Each layer depends only on the interface of the layer directly below it (Dependency Injection, Scoped lifetime).</div>
+  <div class="flow">
+    <div class="row">
+      <div class="layer">
+        <div class="name">Client — React SPA</div>
+        <div class="desc">Vite + TypeScript, Tailwind, GSAP, Three.js · hosted on Vercel</div>
+        <div class="tag">JWT in localStorage · axios interceptor · route guards</div>
+      </div>
+      <div class="side">
+        <div class="name">TMDB API <span class="accent">↗ external service</span></div>
+        <div class="desc">Real movie/TV metadata, HD artwork, full cast — called only by the import service</div>
+      </div>
+    </div>
+    <div class="arrow">▼ HTTPS / JSON<span>requests carry the Bearer token</span></div>
+    <div class="row">
+      <div class="layer">
+        <div class="name">Controllers</div>
+        <div class="desc">Routing, HTTP status codes, <b>[Authorize]</b> role gates — zero business logic</div>
+      </div>
+    </div>
+    <div class="arrow">▼ interfaces<span>IAuthService, ITitleService, ITmdbImportService …</span></div>
+    <div class="row">
+      <div class="layer">
+        <div class="name">Services</div>
+        <div class="desc">All business rules · DTO ⇄ entity mapping · JWT issuing · TMDB import orchestration (transaction)</div>
+      </div>
+    </div>
+    <div class="arrow">▼ interfaces<span>IUserRepository, ITitleRepository, IUnitOfWork …</span></div>
+    <div class="row">
+      <div class="layer">
+        <div class="name">Repositories</div>
+        <div class="desc">EF Core queries, database I/O, computed statistics (average rating, counts)</div>
+      </div>
+    </div>
+    <div class="arrow">▼ EF Core 10 + Npgsql</div>
+    <div class="row">
+      <div class="layer db">
+        <div class="name">PostgreSQL — Supabase</div>
+        <div class="desc">8 tables · unique indexes · check constraint (score 1–10) · code-first migrations</div>
+      </div>
+    </div>
+  </div>
+  <div class="legend">
+    <b>Auth:</b> JWT bearer tokens (HMAC-SHA256), BCrypt password hashing, roles Admin / User / Guest. &nbsp;
+    <b>Cross-cutting:</b> global exception middleware → RFC 7807 ProblemDetails, CORS, rate limiting on /api/auth/*.
+  </div>
+</body>
+</html>

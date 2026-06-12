@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1100px; padding: 36px 44px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #ffffff; color: #1f2430;
+  }
+  h1 { font-size: 21px; font-weight: 700; color: #11151f; }
+  .sub { font-size: 12.5px; color: #5b6472; margin: 4px 0 22px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 18px; }
+  .ent { border: 1.5px solid #c7ced9; border-radius: 9px; overflow: hidden; background: #fff; }
+  .ent > .hd { background: #1f2430; color: #fff; font-size: 13.5px; font-weight: 700; padding: 7px 11px; }
+  .ent.join > .hd { background: #7a5a16; }
+  .ent.link > .hd { background: #1d5a4c; }
+  .ent ul { list-style: none; padding: 6px 0; }
+  .ent li { font-size: 11.5px; padding: 2px 11px; color: #3a4150; display: flex; justify-content: space-between; }
+  .ent li .t { color: #98a1b0; font-size: 10.5px; }
+  .pk { font-weight: 700; color: #11151f; }
+  .fk { color: #b07d2b; }
+  .uk { color: #1d5a4c; }
+  .rels { margin-top: 22px; border-top: 1px solid #e2e6ec; padding-top: 14px; }
+  .rels h2 { font-size: 13px; color: #11151f; margin-bottom: 8px; }
+  .rels div { font-size: 12px; color: #4a5160; padding: 2px 0; }
+  .rels .card { color: #b07d2b; font-weight: 700; font-family: monospace; }
+  .key { margin-top: 14px; font-size: 11px; color: #5b6472; }
+  .key b { color: #11151f; }
+</style>
+</head>
+<body>
+  <h1>Entity-Relationship Diagram</h1>
+  <div class="sub">8 entities · 1:N and M:N relationships · keys and computed-value notes</div>
+  <div class="grid">
+    <div class="ent">
+      <div class="hd">User</div>
+      <ul>
+        <li><span class="pk">Id</span><span class="t">int · PK</span></li>
+        <li><span class="uk">Username</span><span class="t">string · UK</span></li>
+        <li><span class="uk">Email</span><span class="t">string · UK</span></li>
+        <li>PasswordHash<span class="t">bcrypt</span></li>
+        <li>Role<span class="t">Admin/User</span></li>
+        <li>CreatedAt<span class="t">datetime</span></li>
+      </ul>
+    </div>
+    <div class="ent">
+      <div class="hd">Title</div>
+      <ul>
+        <li><span class="pk">Id</span><span class="t">int · PK</span></li>
+        <li><span class="uk">TmdbId</span><span class="t">UK per type</span></li>
+        <li>MediaType<span class="t">Movie/TvShow</span></li>
+        <li>Name, ReleaseYear<span class="t">UK combo</span></li>
+        <li>Director, Runtime<span class="t"></span></li>
+        <li>PosterUrl, BackdropUrl<span class="t"></span></li>
+      </ul>
+    </div>
+    <div class="ent">
+      <div class="hd">Genre</div>
+      <ul>
+        <li><span class="pk">Id</span><span class="t">int · PK</span></li>
+        <li><span class="uk">Name</span><span class="t">string · UK</span></li>
+        <li>TmdbId<span class="t">int?</span></li>
+      </ul>
+    </div>
+    <div class="ent">
+      <div class="hd">Person</div>
+      <ul>
+        <li><span class="pk">Id</span><span class="t">int · PK</span></li>
+        <li><span class="uk">TmdbId</span><span class="t">int? · UK</span></li>
+        <li>Name<span class="t">string</span></li>
+        <li>ProfileImageUrl<span class="t"></span></li>
+      </ul>
+    </div>
+    <div class="ent link">
+      <div class="hd">TitleGenre <span style="font-weight:400">(M:N)</span></div>
+      <ul>
+        <li><span class="pk fk">TitleId</span><span class="t">PK · FK</span></li>
+        <li><span class="pk fk">GenreId</span><span class="t">PK · FK</span></li>
+      </ul>
+    </div>
+    <div class="ent join">
+      <div class="hd">CastMember <span style="font-weight:400">(M:N + payload)</span></div>
+      <ul>
+        <li><span class="pk fk">TitleId</span><span class="t">PK · FK</span></li>
+        <li><span class="pk fk">PersonId</span><span class="t">PK · FK</span></li>
+        <li>CharacterName<span class="t">string</span></li>
+        <li>CastOrder<span class="t">int</span></li>
+      </ul>
+    </div>
+    <div class="ent">
+      <div class="hd">Review</div>
+      <ul>
+        <li><span class="pk">Id</span><span class="t">int · PK</span></li>
+        <li>Content<span class="t">string</span></li>
+        <li><span class="fk">UserId</span><span class="t">FK · UK*</span></li>
+        <li><span class="fk">TitleId</span><span class="t">FK · UK*</span></li>
+        <li>CreatedAt, UpdatedAt<span class="t"></span></li>
+      </ul>
+    </div>
+    <div class="ent">
+      <div class="hd">Rating</div>
+      <ul>
+        <li><span class="pk">Id</span><span class="t">int · PK</span></li>
+        <li>Score<span class="t">1–10 · CHECK</span></li>
+        <li><span class="fk">UserId</span><span class="t">FK · UK*</span></li>
+        <li><span class="fk">TitleId</span><span class="t">FK · UK*</span></li>
+        <li>CreatedAt, UpdatedAt<span class="t"></span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rels">
+    <h2>Relationships</h2>
+    <div><span class="card">User 1 — N Review</span> &nbsp; a user writes many reviews (one per title) &nbsp;·&nbsp; <span class="card">User 1 — N Rating</span> &nbsp; one rating per title</div>
+    <div><span class="card">Title 1 — N Review</span> &nbsp;·&nbsp; <span class="card">Title 1 — N Rating</span> &nbsp; a title receives many reviews and ratings</div>
+    <div><span class="card">Title M — N Genre</span> &nbsp; through TitleGenre &nbsp;·&nbsp; <span class="card">Title M — N Person</span> &nbsp; through CastMember (with character name + billing order)</div>
+  </div>
+  <div class="key">
+    <b>PK</b> primary key &nbsp; <b style="color:#b07d2b">FK</b> foreign key &nbsp; <b style="color:#1d5a4c">UK</b> unique &nbsp;
+    <b>UK*</b> composite unique (UserId, TitleId) — enforces one review &amp; one rating per user per title &nbsp;
+    <b>CHECK</b> database constraint. AverageRating, ReviewCount, TitleCount are computed on response DTOs — never stored.
+  </div>
+</body>
+</html>

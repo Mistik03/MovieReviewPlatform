@@ -7,7 +7,6 @@ export default function PosterCard({ title }: { title: TitleResponse }) {
     <Link
       to={`/title/${title.id}`}
       className="group block w-36 shrink-0 sm:w-44"
-      data-reveal
     >
       <div className="relative aspect-2/3 overflow-hidden rounded-md border border-line bg-panel transition-colors duration-300 group-hover:border-amber/50">
         {title.posterUrl ? (

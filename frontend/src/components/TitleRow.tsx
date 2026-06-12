@@ -20,21 +20,22 @@ export default function TitleRow({ heading, titles }: TitleRowProps) {
 
   useGSAP(
     () => {
+      // Animate the row's own cards. They are visible by default (progressive
+      // enhancement); we only hide-then-reveal them when motion is allowed.
+      const cards = rowRef.current ? gsap.utils.toArray<HTMLElement>(rowRef.current.children) : []
+      if (cards.length === 0) return
+
       const matchMedia = gsap.matchMedia()
       matchMedia.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.to('[data-reveal]', {
+        gsap.set(cards, { opacity: 0, y: 18 })
+        gsap.to(cards, {
           opacity: 1,
           y: 0,
           duration: 0.55,
           ease: 'power2.out',
           stagger: 0.06,
-          startAt: { y: 18 },
           scrollTrigger: { trigger: sectionRef.current, start: 'top 88%', once: true },
         })
-      })
-      // Reduced motion: show everything immediately.
-      matchMedia.add('(prefers-reduced-motion: reduce)', () => {
-        gsap.set('[data-reveal]', { opacity: 1 })
       })
     },
     { scope: sectionRef, dependencies: [titles.length] },
